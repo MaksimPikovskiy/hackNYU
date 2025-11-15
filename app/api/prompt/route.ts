@@ -1,3 +1,4 @@
+import { system_prompt } from "@/lib/constants";
 import { OpenRouter } from "@openrouter/sdk";
 
 const client = new OpenRouter({
@@ -17,7 +18,7 @@ export async function POST(req: Request) {
             messages: [
                 {
                     role: "system",
-                    content: "You are an investment advisor who suggests which industries are getting funded by Congress Acts/Bills.",
+                    content: system_prompt,
                 },
                 {
                     role: "user",
