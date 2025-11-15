@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
 import { getBills } from "../api/bills";
-import InputForm from "@/components/InputForm";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();

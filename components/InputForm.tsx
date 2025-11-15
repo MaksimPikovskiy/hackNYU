@@ -1,29 +1,42 @@
 "use client";
 
-import { promptAI } from "@/app/api/prompt";
-import { useState } from "react";
+import React, { useState } from "react";
 
-export default function InputForm() {
-  const [input, setInput] = useState("");
+type Props = {
+  initialValue?: string;
+};
+
+export default function InputForm({ initialValue }: Props) {
+  const [value, setValue] = useState(initialValue ?? "");
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<string | null>(null);
+  const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!value.trim()) {
+      setError("Please enter a prompt.");
+      return;
+    }
     setLoading(true);
     setError(null);
-    setResponse(null);
+    setResult(null);
 
     try {
-      const res = await promptAI(input);
+      const res = await fetch("/api/prompt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: value }),
+      });
 
-      if (!res) {
-        throw new Error(`API error: ${res}`);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || res.statusText);
       }
 
-      setResponse(res.text || JSON.stringify(res, null, 2));
-      setInput("");
+      const text = await res.text();
+      setResult(text);
+      setValue("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
@@ -32,42 +45,35 @@ export default function InputForm() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-        <label htmlFor="input" className="font-semibold">
-          Enter prompt:
-        </label>
+    <div className="flex flex-col gap-3">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col sm:flex-row gap-2 items-start"
+      >
         <input
-          id="input"
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          id="prompt"
+          name="prompt"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           placeholder="Type your prompt..."
-          className="border border-gray-300 px-3 py-2 rounded"
+          className="flex-1 border rounded px-3 py-2"
           disabled={loading}
         />
         <button
           type="submit"
-          disabled={loading || !input.trim()}
-          className="bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400"
+          disabled={loading || !value.trim()}
+          className="bg-sky-600 text-white px-4 py-2 rounded disabled:opacity-60"
         >
-          {loading ? "Sending..." : "Submit"}
+          {loading ? "Sending..." : "Send"}
         </button>
       </form>
 
-      {error && (
-        <div className="bg-red-100 text-red-800 p-3 rounded">
-          Error: {error}
-        </div>
-      )}
+      {error && <div className="text-sm text-red-700">{error}</div>}
 
-      {response && (
-        <div className="bg-green-100 text-green-800 p-3 rounded">
-          <strong>Response:</strong>
-          <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto whitespace-pre-wrap">
-            {response}
-          </pre>
-        </div>
+      {result && (
+        <pre className="text-xs font-mono p-3 rounded border max-h-48 overflow-auto whitespace-pre-wrap">
+          {result}
+        </pre>
       )}
     </div>
   );
