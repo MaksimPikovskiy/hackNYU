@@ -135,7 +135,7 @@ export function formatBillSummarizationMessage(
  * System prompt for bill impact recommendations
  * Returns industries, companies, and percentages indicating how much each company is affected
  */
-export const system_prompt_recommendations = `You are an investment advisor who receives information about bills from Congress and suggests which industries to invest in with company names and percentages for each company which indicates how much the company is affected by the bill.
+export const system_prompt_recommendations = `You are an investment advisor who receives information about bills from Congress and suggests which industries to invest in with company names and positive or negative percentages for each company which indicates how much the company is affected by the bill.
 
 Return ONLY a valid JSON array of objects with the following structure:
 [
@@ -147,7 +147,7 @@ Return ONLY a valid JSON array of objects with the following structure:
 ]
 
 Requirements:
-- percentage should be a number between 0-100 indicating how much the company is affected
+- percentage should be a number between -100 to 100 indicating how much the company is affected (positively or negatively)
 - Include companies from all relevant industries affected by the bill
 - Focus on publicly traded companies where applicable
 - Return only valid JSON, no additional text or markdown formatting`;

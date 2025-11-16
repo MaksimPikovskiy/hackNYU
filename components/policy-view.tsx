@@ -526,8 +526,15 @@ export default function PolicyView({ selectedPolicy }: Props) {
                           </div>
                           <div className="flex items-center gap-3 ml-4">
                             <div className="text-right">
-                              <div className="text-sm font-semibold">
-                                {rec.percentage}%
+                              <div
+                                className={`text-sm font-semibold ${
+                                  rec.percentage >= 0
+                                    ? "text-green-600 dark:text-green-400"
+                                    : "text-red-600 dark:text-red-400"
+                                }`}
+                              >
+                                {rec.percentage >= 0 ? "+" : ""}
+                                {rec.percentage.toFixed(1)}%
                               </div>
                               <div className="text-xs text-muted-foreground">
                                 affected
@@ -535,8 +542,14 @@ export default function PolicyView({ selectedPolicy }: Props) {
                             </div>
                             <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
                               <div
-                                className="h-full bg-primary transition-all"
-                                style={{ width: `${rec.percentage}%` }}
+                                className={`h-full transition-all ${
+                                  rec.percentage >= 0
+                                    ? "bg-green-500"
+                                    : "bg-red-500"
+                                }`}
+                                style={{
+                                  width: `${Math.abs(rec.percentage)}%`,
+                                }}
                               />
                             </div>
                           </div>
