@@ -8,9 +8,9 @@ export default function ProtectedLayout({
 }) {
   return (
     <main className="min-h-screen flex flex-col items-center">
-      <div className="flex-1 w-full flex flex-col gap-20 items-center">
+      <div className="flex-1 w-full items-center">
         <Navbar />
-        <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
+        <div className="mx-auto max-w-7xl p-5 py-20 md:py-28">
           {children}
         </div>
         <Footer />

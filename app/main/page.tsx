@@ -1,12 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import InputForm from "@/components/input-form";
-import IndustryBox from "@/components/IndustryBox";
-import industries from "../../public/industries.json";
 import PolicyDisplay from "@/components/policies-display";
-import IndustryDisplay from "@/components/industries-display";
-import CompanyDisplay from "@/components/companies-display";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -17,15 +12,8 @@ export default async function ProtectedPage() {
   }
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-12">
-      <IndustryBox industries={industries} />
+    <div className="w-full flex flex-1">
       <PolicyDisplay />
-      <IndustryDisplay />
-      <CompanyDisplay />
-      <div>
-        <h2 className="font-bold text-2xl mb-4">Input Form</h2>
-        <InputForm />
-      </div>
     </div>
   );
 }
