@@ -31,6 +31,8 @@ export default function PoliciesSearch({ policies }: Props) {
       keys: ["title", "number", "type", "originChamber", "latestAction.text"],
       threshold: 0.3, // lower = stricter
       includeScore: true,
+      ignoreLocation: true,
+      includeMatches: true,
     });
   }, [policies]);
 
