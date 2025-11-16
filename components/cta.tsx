@@ -18,7 +18,7 @@ export function CTA() {
           size="lg"
           className="bg-primary hover:bg-primary/90 text-primary-foreground"
         >
-          <Link href="/auth/sign-up">
+          <Link href="/main">
             Explore Policies
             <ArrowRight className="w-4 h-4 ml-2" />
           </Link>
