@@ -1,5 +1,6 @@
 "use client";
 
+import { system_prompt_recommendations } from "@/lib/constants";
 import React, { useState } from "react";
 
 type Props = {
@@ -26,7 +27,10 @@ export default function InputForm({ initialValue }: Props) {
       const res = await fetch("/api/prompt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: value }),
+        body: JSON.stringify({
+          system_prompt: system_prompt_recommendations,
+          user_prompt: value,
+        }),
       });
 
       if (!res.ok) {

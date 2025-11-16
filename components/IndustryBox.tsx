@@ -7,12 +7,15 @@ type IndustryBoxProps = {
   industries: string[];
 };
 
-export default function IndustryBox({ title = "Industries", industries }: IndustryBoxProps) {
+export default function IndustryBox({
+  title = "Industries",
+  industries,
+}: IndustryBoxProps) {
   const [open, setOpen] = useState(false);
 
   return (
     <div
-      className="w-full max-w-md border rounded-xl p-4 cursor-pointer select-none transition hover:bg-gray-50"
+      className="w-full max-w-md border rounded-xl p-4 cursor-pointer select-none transition"
       onClick={() => setOpen(!open)}
     >
       <div className="flex items-center justify-between">
