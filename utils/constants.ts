@@ -112,7 +112,7 @@ export function formatBillSummarizationMessage(
   billTitle: string,
   billType: string,
   billNumber: string,
-  congressId: number,
+  congressId: string,
   industries: string[],
   billContent?: string
 ): string {

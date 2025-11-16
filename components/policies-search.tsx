@@ -2,13 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Fuse from "fuse.js";
-import { Filter, X, Sparkles, LoaderCircle } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Filter, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -19,13 +13,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  system_prompt_bill_summarization,
-  formatBillSummarizationMessage,
-} from "@/utils/constants";
+// import {
+//   system_prompt_bill_summarization,
+//   formatBillSummarizationMessage,
+// } from "@/utils/constants";
 
 type Policy = {
-  congress_id: number;
+  congress_id: string;
   title: string;
   bill_type: string;
   bill_number: string;
@@ -34,9 +28,10 @@ type Policy = {
 
 type Props = {
   policies: Policy[] | undefined;
+  setSelectedPolicy: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export default function PoliciesSearch({ policies }: Props) {
+export default function PoliciesSearch({ policies, setSelectedPolicy }: Props) {
   const [query, setQuery] = useState("");
   const [selectedIndustries, setSelectedIndustries] = useState<Set<string>>(
     new Set()
@@ -47,10 +42,10 @@ export default function PoliciesSearch({ policies }: Props) {
   const [selectedCongressIds, setSelectedCongressIds] = useState<Set<number>>(
     new Set()
   );
-  const [summaries, setSummaries] = useState<Map<string, string>>(new Map());
-  const [loadingSummaries, setLoadingSummaries] = useState<Set<string>>(
-    new Set()
-  );
+  // const [summaries, setSummaries] = useState<Map<string, string>>(new Map());
+  // const [loadingSummaries, setLoadingSummaries] = useState<Set<string>>(
+  //   new Set()
+  // );
 
   // Get unique values for filters
   const uniqueIndustries = useMemo(() => {
@@ -75,7 +70,7 @@ export default function PoliciesSearch({ policies }: Props) {
     if (!policies) return [];
     const ids = new Set<number>();
     policies.forEach((policy) => {
-      ids.add(policy.congress_id);
+      ids.add(Number(policy.congress_id));
     });
     return Array.from(ids).sort((a, b) => b - a);
   }, [policies]);
@@ -128,7 +123,7 @@ export default function PoliciesSearch({ policies }: Props) {
     // Apply Congress ID filter
     if (selectedCongressIds.size > 0) {
       filtered = filtered.filter((policy) =>
-        selectedCongressIds.has(policy.congress_id)
+        selectedCongressIds.has(Number(policy.congress_id))
       );
     }
 
@@ -183,56 +178,56 @@ export default function PoliciesSearch({ policies }: Props) {
     setSelectedCongressIds(newSet);
   };
 
-  const getBillKey = (policy: Policy) => {
-    return `${policy.congress_id}-${policy.bill_type}-${policy.bill_number}`;
-  };
+  // const getBillKey = (policy: Policy) => {
+  //   return `${policy.congress_id}-${policy.bill_type}-${policy.bill_number}`;
+  // };
 
-  const handleSummarize = async (policy: Policy) => {
-    const billKey = getBillKey(policy);
-    
-    // Don't re-summarize if already summarized or currently loading
-    if (summaries.has(billKey) || loadingSummaries.has(billKey)) {
-      return;
-    }
+  // const handleSummarize = async (policy: Policy) => {
+  //   const billKey = getBillKey(policy);
 
-    setLoadingSummaries((prev) => new Set(prev).add(billKey));
+  //   // Don't re-summarize if already summarized or currently loading
+  //   if (summaries.has(billKey) || loadingSummaries.has(billKey)) {
+  //     return;
+  //   }
 
-    try {
-      const userPrompt = formatBillSummarizationMessage(
-        policy.title,
-        policy.bill_type,
-        policy.bill_number,
-        policy.congress_id,
-        policy.industries
-      );
+  //   setLoadingSummaries((prev) => new Set(prev).add(billKey));
 
-      const res = await fetch("/api/prompt", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          system_prompt: system_prompt_bill_summarization,
-          user_prompt: userPrompt,
-        }),
-      });
+  //   try {
+  //     const userPrompt = formatBillSummarizationMessage(
+  //       policy.title,
+  //       policy.bill_type,
+  //       policy.bill_number,
+  //       policy.congress_id,
+  //       policy.industries
+  //     );
 
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || res.statusText);
-      }
+  //     const res = await fetch("/api/prompt", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         system_prompt: system_prompt_bill_summarization,
+  //         user_prompt: userPrompt,
+  //       }),
+  //     });
 
-      const summary = await res.text();
-      setSummaries((prev) => new Map(prev).set(billKey, summary));
-    } catch (err) {
-      console.error("Error summarizing bill:", err);
-      // Optionally show error to user
-    } finally {
-      setLoadingSummaries((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(billKey);
-        return newSet;
-      });
-    }
-  };
+  //     if (!res.ok) {
+  //       const text = await res.text();
+  //       throw new Error(text || res.statusText);
+  //     }
+
+  //     const summary = await res.text();
+  //     setSummaries((prev) => new Map(prev).set(billKey, summary));
+  //   } catch (err) {
+  //     console.error("Error summarizing bill:", err);
+  //     // Optionally show error to user
+  //   } finally {
+  //     setLoadingSummaries((prev) => {
+  //       const newSet = new Set(prev);
+  //       newSet.delete(billKey);
+  //       return newSet;
+  //     });
+  //   }
+  // };
 
   return (
     <div className="space-y-4">
@@ -246,7 +241,7 @@ export default function PoliciesSearch({ policies }: Props) {
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 py-6">
               <Filter className="h-4 w-4" />
               Filters
               {hasActiveFilters && (
@@ -367,74 +362,46 @@ export default function PoliciesSearch({ policies }: Props) {
           Showing {filteredResults.length} of {policies?.length || 0} policies
         </div>
       ) : null}
+      {filteredResults && filteredResults.length > 0 ? (
+        <div className="space-y-4">
+          {filteredResults.map((policy) => (
+            <div key={
+              policy.congress_id +
+              "-" +
+              policy.bill_type +
+              "-" +
+              policy.bill_number
+            }>
+              <div className="flex flex-row items-center justify-between mx-auto">
+                <div
 
-      {filteredResults.length > 0 ? (
-        <Accordion type="multiple">
-          {filteredResults.map((policy) => {
-            const billKey = getBillKey(policy);
-            const summary = summaries.get(billKey);
-            const isLoading = loadingSummaries.has(billKey);
-            const hasSummary = !!summary;
-
-            return (
-              <AccordionItem
-                key={billKey}
-                value={billKey}
-              >
-                <AccordionTrigger>{policy.title}</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-3">
-                    <div className="text-sm text-slate-500">
-                      Congress {policy.congress_id}
-                    </div>
-                    <div className="text-lg font-semibold">
-                      {policy.bill_type} {policy.bill_number}
-                    </div>
-                    <div className="text-xs text-slate-500">
-                      <span className="font-semibold">Industries:</span>{" "}
-                      {policy.industries.join(", ")}
-                    </div>
-
-                    <div className="pt-2 border-t">
-                      {!hasSummary && !isLoading && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleSummarize(policy)}
-                          className="gap-2"
-                        >
-                          <Sparkles className="h-4 w-4" />
-                          Summarize Bill
-                        </Button>
-                      )}
-
-                      {isLoading && (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <LoaderCircle className="h-4 w-4 animate-spin" />
-                          Generating summary...
-                        </div>
-                      )}
-
-                      {hasSummary && (
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <h4 className="text-sm font-semibold">AI Summary</h4>
-                            <Badge variant="secondary" className="text-xs">
-                              Token-optimized
-                            </Badge>
-                          </div>
-                          <div className="text-sm text-foreground bg-muted/50 p-3 rounded-md whitespace-pre-wrap">
-                            {summary}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                >
+                  <div className="text-sm text-slate-500">
+                    Congress {policy.congress_id}
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-            );
-          })}
-        </Accordion>
+                  <div className="text-lg font-semibold">
+                    {policy.bill_type} {policy.bill_number}
+                  </div>
+                  <div className="text-lg font-semibold">
+                    {policy.title}
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {policy.industries.join(", ")}
+                  </div>
+                </div>
+                <Button onClick={() => setSelectedPolicy(
+                  policy.congress_id +
+                  "-" +
+                  policy.bill_type +
+                  "-" +
+                  policy.bill_number
+                )}>View</Button>
+              </div>
+              <hr className="mt-2" />
+            </div>
+          ))}
+        </div>
+
       ) : (
         <div className="flex w-full items-center justify-center py-8">
           <div className="text-center">
