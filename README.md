@@ -13,9 +13,6 @@ Short demo app built with Next.js and Supabase for exploring bills, companies, i
 - Maksim Pikovskiy pikmak2001@gmail.com
 - Phone Khant Kyaw Swa phonekhantkyawswa555@gmail.com
 - Taylor (Xiaoyan) Li DAXIAN1221@GMAIL.COM
-  If you'd like, provide me the real names and emails and I'll update this file.
-
-## Requirements checklist
 
 ## Application description
 
