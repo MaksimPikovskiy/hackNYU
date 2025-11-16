@@ -1,4 +1,4 @@
-import { system_prompt } from "@/lib/constants";
+import { system_prompt_recommendations } from "@/lib/constants";
 import { OpenRouter } from "@openrouter/sdk";
 
 const client = new OpenRouter({
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
             messages: [
                 {
                     role: "system",
-                    content: system_prompt,
+                    content: system_prompt_recommendations,
                 },
                 {
                     role: "user",
@@ -28,7 +28,6 @@ export async function POST(req: Request) {
             stream: false,
         });
 
-        // Safely extract the text from the response (handle possible undefined or array content)
         const rawContent = response.choices?.[0]?.message?.content;
         const text = Array.isArray(rawContent) ? rawContent.join("") : rawContent ?? "";
 
