@@ -82,6 +82,7 @@ Be precise, factual, and token-efficient.`;
  * @param congressId - The Congress ID
  * @param industries - Array of affected industries
  * @param billContent - Optional full bill content/text (if available)
+ * 
  * @returns Formatted user message to pass to the AI
  *
  * @example
@@ -158,6 +159,7 @@ Requirements:
  * @param billNumber - The bill number
  * @param congressId - The Congress ID
  * @param industries - Array of affected industries
+ * 
  * @returns Formatted user message to pass to the AI
  */
 export function formatRecommendationsMessage(
