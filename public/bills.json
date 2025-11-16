@@ -1,0 +1,78 @@
+[
+  {
+    "congress_id": 117,
+    "title": "CHIPS Act",
+    "bill_type": "HR",
+    "bill_number": "4346",
+    "industries": [
+      "Semiconductors",
+      "Manufacturing",
+      "High-Performance Computing",
+      "Industrial Metals",
+      "Mining"
+    ]
+  },
+  {
+    "congress_id": 117,
+    "title": "Inflation Reduction Act",
+    "bill_type": "HR",
+    "bill_number": "5376",
+    "industries": ["Energy", "Automotive", "Industrial Metals"]
+  },
+  {
+    "congress_id": 116,
+    "title": "Clean Water Act Amendment",
+    "bill_type": "S",
+    "bill_number": "2001",
+    "industries": ["Basic Materials", "Industrial Metals", "Mining"]
+  },
+  {
+    "congress_id": 115,
+    "title": "Affordable Care Act Update",
+    "bill_type": "HR",
+    "bill_number": "3590",
+    "industries": ["Pharmaceuticals", "Medical Devices", "Biotechnology"]
+  },
+  {
+    "congress_id": 117,
+    "title": "Bipartisan Infrastructure Law",
+    "bill_type": "HR",
+    "bill_number": "3684",
+    "industries": ["Logistics", "Manufacturing", "Industrial Metals"]
+  },
+  {
+    "congress_id": 117,
+    "title": "Digital Services Act",
+    "bill_type": "HR",
+    "bill_number": "1234",
+    "industries": ["Software", "Internet Services", "Cloud Computing"]
+  },
+  {
+    "congress_id": 116,
+    "title": "Entertainment Modernization Act",
+    "bill_type": "S",
+    "bill_number": "987",
+    "industries": ["Entertainment", "Digital Streaming", "Social Media"]
+  },
+  {
+    "congress_id": 117,
+    "title": "Telecom Innovation Act",
+    "bill_type": "HR",
+    "bill_number": "4567",
+    "industries": ["Telecommunications", "Networking", "Cybersecurity"]
+  },
+  {
+    "congress_id": 116,
+    "title": "Consumer Goods Safety Act",
+    "bill_type": "HR",
+    "bill_number": "789",
+    "industries": ["Consumer Goods", "Household Products", "Food & Beverage"]
+  },
+  {
+    "congress_id": 117,
+    "title": "Aerospace & Defense Funding Act",
+    "bill_type": "S",
+    "bill_number": "2345",
+    "industries": ["Aerospace", "Defense", "High-Performance Computing"]
+  }
+]
