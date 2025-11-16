@@ -17,6 +17,8 @@ import {
   system_prompt_recommendations,
   formatRecommendationsMessage,
 } from "@/utils/constants";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type Props = {
   selectedPolicy: string;
@@ -341,7 +343,9 @@ export default function PolicyView({ selectedPolicy }: Props) {
                 <AccordionTrigger>AI Summary</AccordionTrigger>
                 <AccordionContent>
                   <div className="prose prose-sm max-w-none">
-                    <div className="whitespace-pre-wrap text-sm">{summary}</div>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {summary}
+                    </ReactMarkdown>
                   </div>
                 </AccordionContent>
               </AccordionItem>
