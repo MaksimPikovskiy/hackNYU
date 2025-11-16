@@ -6,13 +6,11 @@ import { LoaderCircle } from "lucide-react";
 import PoliciesSearch from "./policies-search";
 
 type Policy = {
-  congress: string;
-  number: string;
+  congress_id: string;
   title: string;
-  type?: string;
-  originChamber?: string;
-  latestAction?: { text?: string; actionDate?: string };
-  url?: string;
+  bill_type: string;
+  bill_number: string;
+  industries: string[];
 };
 
 export default function PolicyDisplay() {
@@ -31,8 +29,9 @@ export default function PolicyDisplay() {
         }
 
         const json = await res.json();
-        const data = json.bills;
-        setPolicies(data);
+        setPolicies(json);
+        // const data = json.bills;
+        // setPolicies(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {

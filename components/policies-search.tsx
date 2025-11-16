@@ -10,13 +10,11 @@ import {
 } from "@/components/ui/accordion";
 
 type Policy = {
-  congress: string;
-  number: string;
+  congress_id: string;
   title: string;
-  type?: string;
-  originChamber?: string;
-  latestAction?: { text?: string; actionDate?: string };
-  url?: string;
+  bill_type: string;
+  bill_number: string;
+  industries: string[];
 };
 
 type Props = {
@@ -28,7 +26,18 @@ export default function PoliciesSearch({ policies }: Props) {
 
   const fuse = useMemo(() => {
     return new Fuse(policies ?? [], {
-      keys: ["title", "number", "type", "originChamber", "latestAction.text"],
+      keys: [
+        "congress_id",
+        "title",
+        "bill_type",
+        "bill_number",
+        "industries",
+        {
+          name: "typeNumber",
+          getFn: (p: Policy) =>
+            `${p.bill_type ?? ""} ${p.bill_number ?? ""}`.trim(),
+        },
+      ],
       threshold: 0.3, // lower = stricter
       includeScore: true,
       ignoreLocation: true,
@@ -44,14 +53,6 @@ export default function PoliciesSearch({ policies }: Props) {
     return fuse.search(query).map((r) => r.item);
   }, [query, fuse, policies]);
 
-  const formatDate = (iso: string) => {
-    try {
-      return new Date(iso).toLocaleDateString();
-    } catch {
-      return iso;
-    }
-  };
-
   return (
     <div className="space-y-4">
       <input
@@ -66,36 +67,32 @@ export default function PoliciesSearch({ policies }: Props) {
         <Accordion type="multiple">
           {results.map((policy) => (
             <AccordionItem
-              key={policy.congress + " - " + policy.number}
-              value={policy.congress + " - " + policy.number}
+              key={
+                policy.congress_id +
+                "-" +
+                policy.bill_type +
+                "-" +
+                policy.bill_number
+              }
+              value={
+                policy.congress_id +
+                "-" +
+                policy.bill_type +
+                "-" +
+                policy.bill_number
+              }
             >
               <AccordionTrigger>{policy.title}</AccordionTrigger>
               <AccordionContent>
                 <div className="text-sm text-slate-500">
-                  {policy.type} • Congress {policy.congress}
+                  Congress {policy.congress_id}
                 </div>
                 <div className="text-lg font-semibold">
-                  {policy.type} {policy.number}
+                  {policy.bill_type} {policy.bill_number}
                 </div>
-                <div className="text-sm text-slate-600">
-                  Origin: {policy.originChamber}
+                <div className="text-xs text-slate-500">
+                  {policy.industries.join(", ")}
                 </div>
-
-                <div className="text-sm mt-2">{policy.latestAction?.text}</div>
-                {policy.latestAction?.actionDate && (
-                  <div className="text-xs text-slate-500">
-                    Action date: {formatDate(policy.latestAction.actionDate)}
-                  </div>
-                )}
-
-                <a
-                  href={policy.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block text-sm text-blue-600 underline mt-2"
-                >
-                  View policy
-                </a>
               </AccordionContent>
             </AccordionItem>
           ))}
