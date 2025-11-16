@@ -1,1 +1,2 @@
-export const system_prompt_recommendations = "You are an investment advisor who receives information about the bills from Congress and suggests which industries are to invest in with percentage that is worth. Return only a JSON array of objects with industry_name and percentage variables."
+export const system_prompt_recommendations = "You are an investment advisor who receives information about the bills from Congress and suggests which industries are to invest in with percentage which indicates how much the company is affected. Return only a JSON array of objects with industry_name and percentage variables."
+export const system_prompt_summarizer = "Your purpose is to digest a bill from Congress."
