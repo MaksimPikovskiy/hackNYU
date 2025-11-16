@@ -33,7 +33,6 @@ export default function PolicyDisplay() {
 
         const json = await res.json();
         json.sort((a: Policy, b: Policy) => {
-
           if (a.congress_id !== b.congress_id) {
             return Number(b.congress_id) - Number(a.congress_id);
           }
@@ -41,11 +40,13 @@ export default function PolicyDisplay() {
         });
         setPolicies(json);
         if (json.length > 0) {
-          setSelectedPolicy(json[0].congress_id +
-            "-" +
-            json[0].bill_type +
-            "-" +
-            json[0].bill_number)
+          setSelectedPolicy(
+            json[0].congress_id +
+              "-" +
+              json[0].bill_type +
+              "-" +
+              json[0].bill_number
+          );
         }
         // const data = json.bills;
         // setPolicies(data);
@@ -83,13 +84,16 @@ export default function PolicyDisplay() {
       {error && <div className="text-sm text-red-700">{error}</div>}
       <div className="w-full grid grid-cols-6 gap-4">
         <div className="col-span-2 border-r pr-4">
-          <h2 className="font-bold text-2xl mb-2 mt-4">Recent Policies</h2>
+          <h2 className="font-bold text-3xl mb-2 mt-4">Recent Policies</h2>
           {loading ? (
             <div className="flex w-full items-center justify-center">
               <LoaderCircle className="w-12 h-12 animate-spin" />
             </div>
           ) : (
-            <PoliciesSearch policies={policies} setSelectedPolicy={setSelectedPolicy} />
+            <PoliciesSearch
+              policies={policies}
+              setSelectedPolicy={setSelectedPolicy}
+            />
           )}
         </div>
         <div className="col-span-4">
