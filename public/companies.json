@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Apple Inc.",
+    "industries": ["Consumer Electronics", "Software", "Information Technology"]
+  },
+  {
+    "name": "Microsoft Corporation",
+    "industries": ["Software", "Cloud Computing", "Artificial Intelligence"]
+  },
+  {
+    "name": "Alphabet Inc.",
+    "industries": ["Internet Services", "Advertising", "Artificial Intelligence"]
+  },
+  {
+    "name": "Amazon.com, Inc.",
+    "industries": ["E-commerce", "Cloud Computing", "Digital Streaming"]
+  },
+  {
+    "name": "NVIDIA Corporation",
+    "industries": ["Semiconductors", "Artificial Intelligence", "High-Performance Computing"]
+  },
+  {
+    "name": "Tesla, Inc.",
+    "industries": ["Automotive", "Energy", "Manufacturing"]
+  },
+  {
+    "name": "Meta Platforms, Inc.",
+    "industries": ["Social Media", "Advertising", "Virtual Reality"]
+  },
+  {
+    "name": "JPMorgan Chase & Co.",
+    "industries": ["Banking", "Financial Services"]
+  },
+  {
+    "name": "Johnson & Johnson",
+    "industries": ["Pharmaceuticals", "Medical Devices"]
+  },
+  {
+    "name": "Exxon Mobil Corporation",
+    "industries": ["Oil & Gas", "Energy"]
+  },
+  {
+    "name": "Walmart Inc.",
+    "industries": ["Retail", "Logistics"]
+  },
+  {
+    "name": "Cisco Systems, Inc.",
+    "industries": ["Networking", "Cybersecurity", "Telecommunications"]
+  },
+  {
+    "name": "Oracle Corporation",
+    "industries": ["Software", "Database Technology", "Cloud Computing"]
+  },
+  {
+    "name": "Intel Corporation",
+    "industries": ["Semiconductors", "Manufacturing"]
+  },
+  {
+    "name": "The Coca-Cola Company",
+    "industries": ["Beverages", "Consumer Goods"]
+  },
+  {
+    "name": "PepsiCo, Inc.",
+    "industries": ["Food & Beverage", "Consumer Goods"]
+  },
+  {
+    "name": "Netflix, Inc.",
+    "industries": ["Entertainment", "Digital Streaming"]
+  },
+  {
+    "name": "Boeing Company",
+    "industries": ["Aerospace", "Defense"]
+  },
+  {
+    "name": "Pfizer Inc.",
+    "industries": ["Pharmaceuticals", "Biotechnology"]
+  },
+  {
+    "name": "Procter & Gamble",
+    "industries": ["Consumer Goods", "Household Products"]
+  }
+]
