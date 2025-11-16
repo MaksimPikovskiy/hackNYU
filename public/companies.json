@@ -78,5 +78,9 @@
   {
     "name": "Procter & Gamble",
     "industries": ["Consumer Goods", "Household Products"]
+  },
+  {
+    "name": "MP Materials Corp",
+    "industries": ["Basic Materials", "Industrial Metals", "Mining"]
   }
 ]
