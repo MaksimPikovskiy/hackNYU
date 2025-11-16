@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import InputForm from "@/components/InputForm";
 import BillsDisplay from "@/components/BillsDisplay";
+import IndustryBox from "@/components/IndustryBox";
+import industries from "../../public/industries.json";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -14,6 +16,7 @@ export default async function ProtectedPage() {
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
+      <IndustryBox industries={industries} />
       <BillsDisplay />
       <div>
         <h2 className="font-bold text-2xl mb-4">Input Form</h2>
