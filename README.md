@@ -13,13 +13,13 @@ Short demo app built with Next.js and Supabase for exploring bills, companies, i
 - Maksim Pikovskiy pikmak2001@gmail.com
 - Phone Khant Kyaw Swa phonekhantkyawswa555@gmail.com
 - Taylor (Xiaoyan) Li DAXIAN1221@GMAIL.COM
-If you'd like, provide me the real names and emails and I'll update this file.
+  If you'd like, provide me the real names and emails and I'll update this file.
 
 ## Requirements checklist
 
 ## Application description
-PolicySignal automates policy-driven investment research. Our platform scrapes Congressional bills, uses AI to analyze keywords and legislative patterns, identifies affected industries with impact scores, and recommends prime  investment candidates.
 
+PolicySignal automates policy-driven investment research. Our platform scrapes Congressional bills, uses AI to analyze keywords and legislative patterns, identifies affected industries with impact scores, and recommends prime investment candidates.
 
 ## Setup (from scratch)
 
@@ -58,6 +58,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-publishable-or-anon-key>
 ```
 
 Notes:
+
 - With no Supabase env vars present the app uses local demo data under `public/` for companies, industries, and bills.
 - Do not commit secrets. Add `.env.local` to `.gitignore` (Next.js templates do this by default).
 
@@ -115,13 +116,4 @@ npm run typecheck
 
 ## License
 
-This project inherits the repository license. See `LICENSE`.
-
-## Next steps (optional)
-
-- Replace team placeholders with real names/emails.
-- Add short screenshots or a GIF in this README.
-- Optionally add a CONTRIBUTING.md and CODE_OF_CONDUCT.md if this will be public.
-
----
-Generated/updated README for this codebase.
+This project use MIT license. See `LICENSE`.
