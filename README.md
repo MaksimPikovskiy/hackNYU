@@ -69,7 +69,7 @@ npm run dev
 # or: pnpm dev
 ```
 
-Open https://hack-nyu-rosy.vercel.app/main in a browser.
+Open http://localhost:3000/ in a browser.
 
 ## Build and Run (production)
 
