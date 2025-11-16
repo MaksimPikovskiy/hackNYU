@@ -112,7 +112,7 @@ export function formatBillSummarizationMessage(
   billTitle: string,
   billType: string,
   billNumber: string,
-  congressId: string,
+  congressId: number,
   industries: string[],
   billContent?: string
 ): string {
@@ -126,6 +126,52 @@ export function formatBillSummarizationMessage(
   } else {
     message += `\nProvide a concise summary based on the bill title and affected industries, focusing on likely key provisions and potential market impact.`;
   }
+  
+  return message;
+}
+
+/**
+ * System prompt for bill impact recommendations
+ * Returns industries, companies, and percentages indicating how much each company is affected
+ */
+export const system_prompt_recommendations = `You are an investment advisor who receives information about bills from Congress and suggests which industries to invest in with company names and percentages for each company which indicates how much the company is affected by the bill.
+
+Return ONLY a valid JSON array of objects with the following structure:
+[
+  {
+    "industry_name": "Industry Name",
+    "company_name": "Company Name",
+    "percentage": 75
+  }
+]
+
+Requirements:
+- percentage should be a number between 0-100 indicating how much the company is affected
+- Include companies from all relevant industries affected by the bill
+- Focus on publicly traded companies where applicable
+- Return only valid JSON, no additional text or markdown formatting`;
+
+/**
+ * Formats the user message for bill impact recommendations
+ * @param billTitle - The title of the bill
+ * @param billType - The bill type (HR, S, etc.)
+ * @param billNumber - The bill number
+ * @param congressId - The Congress ID
+ * @param industries - Array of affected industries
+ * @returns Formatted user message to pass to the AI
+ */
+export function formatRecommendationsMessage(
+  billTitle: string,
+  billType: string,
+  billNumber: string,
+  congressId: number | string,
+  industries: string[]
+): string {
+  let message = `Analyze the following Congressional bill and provide investment recommendations:\n\n`;
+  message += `Bill: ${billType} ${billNumber} - ${billTitle}\n`;
+  message += `Congress: ${congressId}\n`;
+  message += `Affected Industries: ${industries.join(", ")}\n\n`;
+  message += `Based on this bill, provide a JSON array of recommendations with industry_name, company_name, and percentage (0-100) indicating how much each company is affected by this bill.`;
   
   return message;
 }

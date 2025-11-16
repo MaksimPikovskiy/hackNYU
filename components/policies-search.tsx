@@ -13,10 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-// import {
-//   system_prompt_bill_summarization,
-//   formatBillSummarizationMessage,
-// } from "@/utils/constants";
 
 type Policy = {
   congress_id: string;
@@ -42,10 +38,7 @@ export default function PoliciesSearch({ policies, setSelectedPolicy }: Props) {
   const [selectedCongressIds, setSelectedCongressIds] = useState<Set<number>>(
     new Set()
   );
-  // const [summaries, setSummaries] = useState<Map<string, string>>(new Map());
-  // const [loadingSummaries, setLoadingSummaries] = useState<Set<string>>(
-  //   new Set()
-  // );
+
 
   // Get unique values for filters
   const uniqueIndustries = useMemo(() => {
@@ -177,57 +170,6 @@ export default function PoliciesSearch({ policies, setSelectedPolicy }: Props) {
     }
     setSelectedCongressIds(newSet);
   };
-
-  // const getBillKey = (policy: Policy) => {
-  //   return `${policy.congress_id}-${policy.bill_type}-${policy.bill_number}`;
-  // };
-
-  // const handleSummarize = async (policy: Policy) => {
-  //   const billKey = getBillKey(policy);
-
-  //   // Don't re-summarize if already summarized or currently loading
-  //   if (summaries.has(billKey) || loadingSummaries.has(billKey)) {
-  //     return;
-  //   }
-
-  //   setLoadingSummaries((prev) => new Set(prev).add(billKey));
-
-  //   try {
-  //     const userPrompt = formatBillSummarizationMessage(
-  //       policy.title,
-  //       policy.bill_type,
-  //       policy.bill_number,
-  //       policy.congress_id,
-  //       policy.industries
-  //     );
-
-  //     const res = await fetch("/api/prompt", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         system_prompt: system_prompt_bill_summarization,
-  //         user_prompt: userPrompt,
-  //       }),
-  //     });
-
-  //     if (!res.ok) {
-  //       const text = await res.text();
-  //       throw new Error(text || res.statusText);
-  //     }
-
-  //     const summary = await res.text();
-  //     setSummaries((prev) => new Map(prev).set(billKey, summary));
-  //   } catch (err) {
-  //     console.error("Error summarizing bill:", err);
-  //     // Optionally show error to user
-  //   } finally {
-  //     setLoadingSummaries((prev) => {
-  //       const newSet = new Set(prev);
-  //       newSet.delete(billKey);
-  //       return newSet;
-  //     });
-  //   }
-  // };
 
   return (
     <div className="space-y-4">
