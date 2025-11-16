@@ -28,14 +28,14 @@ Be objective, data-driven, and consider both opportunities and risks.`;
  * Formats the user message for investment company recommendations
  * @param industry - The selected industry name
  * @returns Formatted user message to pass to the AI
- * 
+ *
  * @example
  * ```typescript
  * import { system_prompt_investment_companies, formatInvestmentUserMessage } from "@/utils/constants";
- * 
+ *
  * const industry = "Technology";
  * const userMessage = formatInvestmentUserMessage(industry);
- * 
+ *
  * // Call the existing API route
  * const response = await fetch("/api/prompt", {
  *   method: "POST",
@@ -45,7 +45,7 @@ Be objective, data-driven, and consider both opportunities and risks.`;
  *     user_prompt: userMessage,
  *   }),
  * });
- * 
+ *
  * const recommendations = await response.text();
  * ```
  */
@@ -62,7 +62,7 @@ export const system_prompt_bill_summarization = `You are an expert policy analys
 CRITICAL REQUIREMENTS FOR COST REDUCTION:
 1. Keep summaries under 150 words
 2. Use bullet points instead of paragraphs when possible
-3. Focus only on: key provisions, affected industries, and potential impact
+3. Focus only on: key provisions, affected industries, and potential positive and negative impact
 4. Eliminate redundant phrases and filler words
 5. Use abbreviations where appropriate (e.g., "HR" for House Resolution)
 6. Prioritize actionable information over background context
@@ -70,7 +70,7 @@ CRITICAL REQUIREMENTS FOR COST REDUCTION:
 Format your response as:
 - **Key Provisions**: (2-3 bullet points)
 - **Affected Industries**: (list)
-- **Potential Impact**: (1-2 sentences)
+- **Potential Impact**: (1–2 sentences, include positive/negative effects on companies within the listed industries)
 
 Be precise, factual, and token-efficient.`;
 
@@ -83,11 +83,11 @@ Be precise, factual, and token-efficient.`;
  * @param industries - Array of affected industries
  * @param billContent - Optional full bill content/text (if available)
  * @returns Formatted user message to pass to the AI
- * 
+ *
  * @example
  * ```typescript
  * import { system_prompt_bill_summarization, formatBillSummarizationMessage } from "@/utils/constants";
- * 
+ *
  * const userMessage = formatBillSummarizationMessage(
  *   "CHIPS Act",
  *   "HR",
@@ -95,7 +95,7 @@ Be precise, factual, and token-efficient.`;
  *   117,
  *   ["Semiconductors", "Manufacturing"]
  * );
- * 
+ *
  * const response = await fetch("/api/prompt", {
  *   method: "POST",
  *   headers: { "Content-Type": "application/json" },
@@ -104,7 +104,7 @@ Be precise, factual, and token-efficient.`;
  *     user_prompt: userMessage,
  *   }),
  * });
- * 
+ *
  * const summary = await response.text();
  * ```
  */
@@ -120,13 +120,13 @@ export function formatBillSummarizationMessage(
   message += `Bill: ${billType} ${billNumber} - ${billTitle}\n`;
   message += `Congress: ${congressId}\n`;
   message += `Affected Industries: ${industries.join(", ")}\n`;
-  
+
   if (billContent) {
     message += `\nBill Content:\n${billContent.substring(0, 2000)}...`; // Limit content to reduce tokens
   } else {
     message += `\nProvide a concise summary based on the bill title and affected industries, focusing on likely key provisions and potential market impact.`;
   }
-  
+
   return message;
 }
 
@@ -172,7 +172,6 @@ export function formatRecommendationsMessage(
   message += `Congress: ${congressId}\n`;
   message += `Affected Industries: ${industries.join(", ")}\n\n`;
   message += `Based on this bill, provide a JSON array of recommendations with industry_name, company_name, and percentage (0-100) indicating how much each company is affected by this bill.`;
-  
+
   return message;
 }
-
