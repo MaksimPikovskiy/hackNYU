@@ -53,3 +53,80 @@ export function formatInvestmentUserMessage(industry: string): string {
   return `Please provide investment recommendations for companies in the ${industry} industry.`;
 }
 
+/**
+ * System prompt for bill/policy summarization
+ * Optimized for cost reduction by requesting concise, token-efficient summaries
+ */
+export const system_prompt_bill_summarization = `You are an expert policy analyst specializing in Congressional bills and legislation. Your task is to provide extremely concise summaries that reduce token usage while maintaining critical information.
+
+CRITICAL REQUIREMENTS FOR COST REDUCTION:
+1. Keep summaries under 150 words
+2. Use bullet points instead of paragraphs when possible
+3. Focus only on: key provisions, affected industries, and potential impact
+4. Eliminate redundant phrases and filler words
+5. Use abbreviations where appropriate (e.g., "HR" for House Resolution)
+6. Prioritize actionable information over background context
+
+Format your response as:
+- **Key Provisions**: (2-3 bullet points)
+- **Affected Industries**: (list)
+- **Potential Impact**: (1-2 sentences)
+
+Be precise, factual, and token-efficient.`;
+
+/**
+ * Formats the user message for bill summarization
+ * @param billTitle - The title of the bill
+ * @param billType - The bill type (HR, S, etc.)
+ * @param billNumber - The bill number
+ * @param congressId - The Congress ID
+ * @param industries - Array of affected industries
+ * @param billContent - Optional full bill content/text (if available)
+ * @returns Formatted user message to pass to the AI
+ * 
+ * @example
+ * ```typescript
+ * import { system_prompt_bill_summarization, formatBillSummarizationMessage } from "@/utils/constants";
+ * 
+ * const userMessage = formatBillSummarizationMessage(
+ *   "CHIPS Act",
+ *   "HR",
+ *   "4346",
+ *   117,
+ *   ["Semiconductors", "Manufacturing"]
+ * );
+ * 
+ * const response = await fetch("/api/prompt", {
+ *   method: "POST",
+ *   headers: { "Content-Type": "application/json" },
+ *   body: JSON.stringify({
+ *     system_prompt: system_prompt_bill_summarization,
+ *     user_prompt: userMessage,
+ *   }),
+ * });
+ * 
+ * const summary = await response.text();
+ * ```
+ */
+export function formatBillSummarizationMessage(
+  billTitle: string,
+  billType: string,
+  billNumber: string,
+  congressId: number,
+  industries: string[],
+  billContent?: string
+): string {
+  let message = `Summarize the following Congressional bill in a concise, token-efficient manner:\n\n`;
+  message += `Bill: ${billType} ${billNumber} - ${billTitle}\n`;
+  message += `Congress: ${congressId}\n`;
+  message += `Affected Industries: ${industries.join(", ")}\n`;
+  
+  if (billContent) {
+    message += `\nBill Content:\n${billContent.substring(0, 2000)}...`; // Limit content to reduce tokens
+  } else {
+    message += `\nProvide a concise summary based on the bill title and affected industries, focusing on likely key provisions and potential market impact.`;
+  }
+  
+  return message;
+}
+

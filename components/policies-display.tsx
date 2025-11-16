@@ -6,7 +6,7 @@ import { LoaderCircle } from "lucide-react";
 import PoliciesSearch from "./policies-search";
 
 type Policy = {
-  congress_id: string;
+  congress_id: number;
   title: string;
   bill_type: string;
   bill_number: string;

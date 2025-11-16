@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Fuse from "fuse.js";
-import { Filter, X } from "lucide-react";
+import { Filter, X, Sparkles, LoaderCircle } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -19,9 +19,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  system_prompt_bill_summarization,
+  formatBillSummarizationMessage,
+} from "@/utils/constants";
 
 type Policy = {
-  congress_id: string;
+  congress_id: number;
   title: string;
   bill_type: string;
   bill_number: string;
@@ -41,6 +45,10 @@ export default function PoliciesSearch({ policies }: Props) {
     new Set()
   );
   const [selectedCongressIds, setSelectedCongressIds] = useState<Set<number>>(
+    new Set()
+  );
+  const [summaries, setSummaries] = useState<Map<string, string>>(new Map());
+  const [loadingSummaries, setLoadingSummaries] = useState<Set<string>>(
     new Set()
   );
 
@@ -173,6 +181,57 @@ export default function PoliciesSearch({ policies }: Props) {
       newSet.add(congressId);
     }
     setSelectedCongressIds(newSet);
+  };
+
+  const getBillKey = (policy: Policy) => {
+    return `${policy.congress_id}-${policy.bill_type}-${policy.bill_number}`;
+  };
+
+  const handleSummarize = async (policy: Policy) => {
+    const billKey = getBillKey(policy);
+    
+    // Don't re-summarize if already summarized or currently loading
+    if (summaries.has(billKey) || loadingSummaries.has(billKey)) {
+      return;
+    }
+
+    setLoadingSummaries((prev) => new Set(prev).add(billKey));
+
+    try {
+      const userPrompt = formatBillSummarizationMessage(
+        policy.title,
+        policy.bill_type,
+        policy.bill_number,
+        policy.congress_id,
+        policy.industries
+      );
+
+      const res = await fetch("/api/prompt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_prompt: system_prompt_bill_summarization,
+          user_prompt: userPrompt,
+        }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || res.statusText);
+      }
+
+      const summary = await res.text();
+      setSummaries((prev) => new Map(prev).set(billKey, summary));
+    } catch (err) {
+      console.error("Error summarizing bill:", err);
+      // Optionally show error to user
+    } finally {
+      setLoadingSummaries((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(billKey);
+        return newSet;
+      });
+    }
   };
 
   return (
@@ -311,38 +370,70 @@ export default function PoliciesSearch({ policies }: Props) {
 
       {filteredResults.length > 0 ? (
         <Accordion type="multiple">
-          {filteredResults.map((policy) => (
-            <AccordionItem
-              key={
-                policy.congress_id +
-                "-" +
-                policy.bill_type +
-                "-" +
-                policy.bill_number
-              }
-              value={
-                policy.congress_id +
-                "-" +
-                policy.bill_type +
-                "-" +
-                policy.bill_number
-              }
-            >
-              <AccordionTrigger>{policy.title}</AccordionTrigger>
-              <AccordionContent>
-                <div className="text-sm text-slate-500">
-                  Congress {policy.congress_id}
-                </div>
-                <div className="text-lg font-semibold">
-                  {policy.bill_type} {policy.bill_number}
-                </div>
-                <div className="text-xs text-slate-500 mt-2">
-                  <span className="font-semibold">Industries:</span>{" "}
-                  {policy.industries.join(", ")}
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          ))}
+          {filteredResults.map((policy) => {
+            const billKey = getBillKey(policy);
+            const summary = summaries.get(billKey);
+            const isLoading = loadingSummaries.has(billKey);
+            const hasSummary = !!summary;
+
+            return (
+              <AccordionItem
+                key={billKey}
+                value={billKey}
+              >
+                <AccordionTrigger>{policy.title}</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-3">
+                    <div className="text-sm text-slate-500">
+                      Congress {policy.congress_id}
+                    </div>
+                    <div className="text-lg font-semibold">
+                      {policy.bill_type} {policy.bill_number}
+                    </div>
+                    <div className="text-xs text-slate-500">
+                      <span className="font-semibold">Industries:</span>{" "}
+                      {policy.industries.join(", ")}
+                    </div>
+
+                    <div className="pt-2 border-t">
+                      {!hasSummary && !isLoading && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleSummarize(policy)}
+                          className="gap-2"
+                        >
+                          <Sparkles className="h-4 w-4" />
+                          Summarize Bill
+                        </Button>
+                      )}
+
+                      {isLoading && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <LoaderCircle className="h-4 w-4 animate-spin" />
+                          Generating summary...
+                        </div>
+                      )}
+
+                      {hasSummary && (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-semibold">AI Summary</h4>
+                            <Badge variant="secondary" className="text-xs">
+                              Token-optimized
+                            </Badge>
+                          </div>
+                          <div className="text-sm text-foreground bg-muted/50 p-3 rounded-md whitespace-pre-wrap">
+                            {summary}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
         </Accordion>
       ) : (
         <div className="flex w-full items-center justify-center py-8">
