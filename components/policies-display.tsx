@@ -7,8 +7,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { LoaderCircle } from "lucide-react";
 
-type Bill = {
+type Policy = {
   congress: string;
   number: string;
   title: string;
@@ -18,13 +19,13 @@ type Bill = {
   url?: string;
 };
 
-export default function BillsDisplay() {
-  const [bills, setBills] = useState<Bill[] | undefined>();
-  const [loading, setLoading] = useState(false);
+export default function PolicyDisplay() {
+  const [policies, setPolicies] = useState<Policy[] | undefined>();
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function getBills() {
+    async function getPolicies() {
       try {
         const res = await fetch("/api/bills");
 
@@ -35,14 +36,14 @@ export default function BillsDisplay() {
 
         const json = await res.json();
         const data = json.bills;
-        setBills(data);
+        setPolicies(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         setLoading(false);
       }
     }
-    getBills();
+    getPolicies();
   }, []);
 
   const formatDate = (iso: string) => {
@@ -55,46 +56,56 @@ export default function BillsDisplay() {
 
   return (
     <div className="flex flex-col gap-2 items-start">
-      <h2 className="font-bold text-2xl mb-4">Current Bills</h2>
-      {bills && (
+      <h2 className="font-bold text-2xl mb-4">Current Policies</h2>
+      {loading ? (
+        <div className="flex w-full items-center justify-center">
+          <LoaderCircle className="w-12 h-12 animate-spin" />
+        </div>
+      ) : policies ? (
         <Accordion type="multiple">
-          {bills.map((bill) => (
+          {policies.map((policy) => (
             <AccordionItem
-              key={bill.congress + " - " + bill.number}
-              value={bill.congress + " - " + bill.number}
+              key={policy.congress + " - " + policy.number}
+              value={policy.congress + " - " + policy.number}
             >
-              <AccordionTrigger>{bill.title}</AccordionTrigger>
+              <AccordionTrigger>{policy.title}</AccordionTrigger>
               <AccordionContent>
                 <div className="text-sm text-slate-500">
-                  {bill.type} • Congress {bill.congress}
+                  {policy.type} • Congress {policy.congress}
                 </div>
                 <div className="text-lg font-semibold">
-                  {bill.type} {bill.number}
+                  {policy.type} {policy.number}
                 </div>
                 <div className="text-sm text-slate-600">
-                  Origin: {bill.originChamber}
+                  Origin: {policy.originChamber}
                 </div>
 
-                <div className="text-sm mt-2">{bill.latestAction?.text}</div>
-                {bill.latestAction?.actionDate && (
+                <div className="text-sm mt-2">{policy.latestAction?.text}</div>
+                {policy.latestAction?.actionDate && (
                   <div className="text-xs text-slate-500">
-                    Action date: {formatDate(bill.latestAction.actionDate)}
+                    Action date: {formatDate(policy.latestAction.actionDate)}
                   </div>
                 )}
 
                 <a
-                  href={bill.url}
+                  href={policy.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block text-sm text-blue-600 underline mt-2"
                 >
-                  View bill
+                  View policy
                 </a>
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
+      ) : (
+        <div className="flex w-full items-center justify-center">
+          <h2>No Policies Found.</h2>
+        </div>
       )}
+
+      {error && <div className="text-sm text-red-700">{error}</div>}
     </div>
   );
 }

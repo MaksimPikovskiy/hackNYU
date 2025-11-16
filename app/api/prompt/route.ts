@@ -1,4 +1,3 @@
-import { system_prompt_recommendations } from "@/lib/constants";
 import { OpenRouter } from "@openrouter/sdk";
 
 const client = new OpenRouter({
@@ -7,9 +6,9 @@ const client = new OpenRouter({
 
 export async function POST(req: Request) {
     try {
-        const { prompt } = await req.json();
+        const { system_prompt, user_prompt } = await req.json();
 
-        if (!prompt) {
+        if (!user_prompt) {
             return new Response("Missing prompt", { status: 400 });
         }
 
@@ -18,11 +17,11 @@ export async function POST(req: Request) {
             messages: [
                 {
                     role: "system",
-                    content: system_prompt_recommendations,
+                    content: system_prompt,
                 },
                 {
                     role: "user",
-                    content: prompt,
+                    content: user_prompt,
                 },
             ],
             stream: false,
